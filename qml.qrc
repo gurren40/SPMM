@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Day.qml</file>
+        <file>Month.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>Year.qml</file>
+    </qresource>
+</RCC>
