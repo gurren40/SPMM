@@ -5,5 +5,6 @@
         <file>Month.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>Year.qml</file>
+        <file>OtherMenu.qml</file>
     </qresource>
 </RCC>

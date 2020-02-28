@@ -10,13 +10,13 @@ Page {
         id : theToolbar
         width: parent.width
         ToolButton{
-            text: "Left"
+            icon.name: "chevron_left"
             onClicked: {
-                var x = mother.currentDate.getMonth() - 1;
+                var x = mother.currentDate.getDate() - 1;
                 var y = mother.currentDate;
-                y.setMonth(x);
+                y.setDate(x);
                 mother.currentDate = y;
-                console.log(mother.currentDate.getMonth());
+                console.log(mother.currentDate.getDate());
                 dayTimer.running = true;
             }
             anchors.left: parent.left
@@ -24,20 +24,20 @@ Page {
         }
 
         Label {
-            text: mother.currentDate.toLocaleString(Qt.locale("en_US"),"MMMM yyyy")
+            text: mother.currentDate.toLocaleString(Qt.locale("en_US"),"dd MMMM yyyy")
             font.pixelSize: Qt.application.font.pixelSize * 2
             padding: 10
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
         ToolButton{
-            text: "Right"
+            icon.name: "chevron_right"
             onClicked: {
-                var x = mother.currentDate.getMonth() + 1;
+                var x = mother.currentDate.getDate() + 1;
                 var y = mother.currentDate;
-                y.setMonth(x);
+                y.setDate(x);
                 mother.currentDate = y;
-                console.log(mother.currentDate.getMonth());
+                console.log(mother.currentDate.getDate());
                 dayTimer.running = true;
             }
             anchors.right: parent.right
@@ -48,7 +48,8 @@ Page {
     ListModel{
         id:datemodel
         ListElement{
-            date:1
+            iconname:"power"
+            notes:"1"
             balance:0
         }
     }
@@ -60,12 +61,12 @@ Page {
         running: true
         onTriggered: {
             datemodel.clear();
-            datemodel.append({date:1,balance:1});
+            datemodel.append({iconname:"sun",balance:0,notes:"Matahari"});
             var number = 2;
             var thedate = mother.currentDate;
             while(number != 1){
                 thedate.setDate(number);
-                datemodel.append({date:thedate.getDate(),balance:thedate.getDate()});
+                datemodel.append({iconname:"lamp",balance:thedate.getDate(),notes:"Listrik"});
                 thedate.setDate(number+1);
                 number = thedate.getDate();
                 console.log(number);
@@ -78,9 +79,26 @@ Page {
         anchors.fill: parent
         height: parent.height - theToolbar.height
         clip: true
-        delegate: ItemDelegate{
+        delegate: Row{
             width: parent.width
-            text: model.date+' > '+model.balance
+            ItemDelegate{
+                id:notbalance
+                width: parent.width - balance.width
+                text: model.notes
+                icon.name : model.iconname
+                hoverEnabled: false
+                onClicked: onClickedAction()
+                function onClickedAction(){
+                    console.log("clicked")
+                }
+            }
+            ItemDelegate{
+                id:balance
+                hoverEnabled: false
+                anchors.verticalCenter: notbalance.verticalCenter
+                text: "Rp."+model.balance
+                onClicked: notbalance.onClickedAction()
+            }
         }
     }
 }

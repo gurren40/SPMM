@@ -21,6 +21,9 @@ ApplicationWindow {
 
         Year {
         }
+
+        OtherMenu{
+        }
     }
 
     footer: TabBar {
@@ -35,6 +38,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("Year")
+        }
+        TabButton {
+            icon.name:"menu"
         }
     }
 }

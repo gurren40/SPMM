@@ -5,10 +5,43 @@ Page {
     id:mother
     property date currentDate : new Date()
 
-    header: Label {
-        text: qsTr("Year")
-        font.pixelSize: Qt.application.font.pixelSize * 2
-        padding: 10
+    header: ToolBar{
+        id : theToolbar
+        width: parent.width
+        ToolButton{
+            icon.name: "chevron_left"
+            onClicked: {
+                var x = mother.currentDate.getFullYear() - 1;
+                var y = mother.currentDate;
+                y.setFullYear(x);
+                mother.currentDate = y;
+                console.log(mother.currentDate.getMonth());
+                dayTimer.running = true;
+            }
+            anchors.left: parent.left
+            padding: 10
+        }
+
+        Label {
+            text: mother.currentDate.toLocaleString(Qt.locale("en_US"),"yyyy")
+            font.pixelSize: Qt.application.font.pixelSize * 2
+            padding: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        ToolButton{
+            icon.name: "chevron_right"
+            onClicked: {
+                var x = mother.currentDate.getFullYear() + 1;
+                var y = mother.currentDate;
+                y.setFullYear(x);
+                mother.currentDate = y;
+                console.log(mother.currentDate.getMonth());
+                dayTimer.running = true;
+            }
+            anchors.right: parent.right
+            padding: 10
+        }
     }
 
     ListModel{

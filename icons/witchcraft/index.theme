@@ -1,0 +1,11 @@
+[Icon Theme]
+Name=Witchcraft
+Comment=Witchcraft icons
+
+Directories=24x24S
+
+[24x24S]
+Size=24
+Type=Scalable
+MinSize=1
+MaxSize=256
