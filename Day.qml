@@ -101,4 +101,22 @@ Page {
             }
         }
     }
+
+    //nambah data hanya dari sini
+    RoundButton {
+        id: createButton
+        //text: qsTr("+")
+        icon.name: "plus"
+        icon.height: 36
+        icon.width: 36
+        icon.color: Material.background
+        highlighted: true
+        anchors.margins: 10
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 70
+        width: height
+        //font.pointSize: 35
+        visible: true
+    }
 }
