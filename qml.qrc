@@ -6,5 +6,6 @@
         <file>qtquickcontrols2.conf</file>
         <file>Year.qml</file>
         <file>OtherMenu.qml</file>
+        <file>db/spmm.sqlite</file>
     </qresource>
 </RCC>

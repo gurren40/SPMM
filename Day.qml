@@ -48,9 +48,8 @@ Page {
     ListModel{
         id:datemodel
         ListElement{
-            iconname:"power"
-            notes:"1"
-            balance:0
+            nama_icon:"power"
+            id_icon:1
         }
     }
 
@@ -61,15 +60,10 @@ Page {
         running: true
         onTriggered: {
             datemodel.clear();
-            datemodel.append({iconname:"sun",balance:0,notes:"Matahari"});
-            var number = 2;
-            var thedate = mother.currentDate;
-            while(number != 1){
-                thedate.setDate(number);
-                datemodel.append({iconname:"lamp",balance:thedate.getDate(),notes:"Listrik"});
-                thedate.setDate(number+1);
-                number = thedate.getDate();
-                console.log(number);
+            var jicons = JSON.parse(eKategori.icons).icon;
+            console.log(JSON.stringify(jicons));
+            for(var i=0;i<jicons.length;i++){
+                datemodel.append({nama_icon:jicons[i].nama_icon,id_icon:jicons[i].id_icon});
             }
         }
     }
@@ -79,13 +73,17 @@ Page {
         anchors.fill: parent
         height: parent.height - theToolbar.height
         clip: true
+        header: Loader{
+            id : listLoader
+        }
+
         delegate: Row{
             width: parent.width
             ItemDelegate{
                 id:notbalance
                 width: parent.width - balance.width
-                text: model.notes
-                icon.name : model.iconname
+                text: model.nama_icon+" "+model.id_icon
+                icon.name : model.nama_icon
                 hoverEnabled: false
                 onClicked: onClickedAction()
                 function onClickedAction(){
@@ -96,7 +94,7 @@ Page {
                 id:balance
                 hoverEnabled: false
                 anchors.verticalCenter: notbalance.verticalCenter
-                text: "Rp."+model.balance
+                text: "Rp."+model.id_icon
                 onClicked: notbalance.onClickedAction()
             }
         }
