@@ -15,11 +15,11 @@
 class Etransaksi : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString dayTr READ today NOTIFY jsonDataChanged)
-    Q_PROPERTY(QString monthTr READ thisMonth NOTIFY jsonDataChanged)
-    Q_PROPERTY(QString yearTr READ thisYear NOTIFY jsonDataChanged)
-    Q_PROPERTY(QString selectedDate READ getSelectDateStr NOTIFY dateSearchChanged)
-    Q_PROPERTY(QString selectedRangeDate READ getSelectRangeDateStr NOTIFY dateSearchChanged)
+    Q_PROPERTY(QString day READ getDay NOTIFY jsonDataChanged)
+    Q_PROPERTY(QString month READ getMonth NOTIFY jsonDataChanged)
+    Q_PROPERTY(QString year READ getYear NOTIFY jsonDataChanged)
+    Q_PROPERTY(QString ranged READ getRanged NOTIFY jsonDataChanged)
+
 public:
     explicit Etransaksi(QSqlDatabase *database, QObject *parent = nullptr);
 
@@ -28,22 +28,25 @@ signals:
     void dateSearchChanged();
 
 public:
+    //misc function
+    QJsonArray parseSql(QSqlQuery query);
 
+    QString getDay() const;
+    QString getMonth() const;
+    QString getYear() const;
+    QString getRanged() const;
+
+public slots:
     //read data
     QString today();
     QString thisMonth();
     QString thisYear();
-
-    //misc function
-    QJsonArray parseSql(QSqlQuery query);
-
-    QString getSelectDateStr() const;
-    QString getSelectRangeDateStr() const;
-
-public slots:
     //read by date
     QString selectDate(QString date);
+    QString selectMonth(QString month);
+    QString selectYear(QString year);
     QString selectRangeDate(QString date1, QString date2);
+
     //cud
     QString createTransaksi(QDate waktu_dibuat,int id_kategori,QString keterangan,double debet, double kredit);
     QString updateTransaksi(int id_transaksi,QDate waktu_dibuat,int id_kategori,QString keterangan,double debet, double kredit);
@@ -51,8 +54,10 @@ public slots:
 
 private:
     QSqlDatabase* m_database;
-    QString selectDateStr;
-    QString selectRangeDateStr;
+    QString day;
+    QString month;
+    QString year;
+    QString ranged;
 };
 
 #endif // ETRANSAKSI_H

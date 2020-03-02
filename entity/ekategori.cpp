@@ -54,7 +54,7 @@ QString Ekategori::readIcon()
 
 QString Ekategori::createKategori(QString nama_kategori,int id_icon, QString warna_icon)
 {
-    QString textQuery = "INSERT INTO `kategori` (`nama_kategori`,`id_icon`,`warna_icon`,`debet`,`kredit`) VALUES ('"+nama_kategori+"','"+QString::number(id_icon)+"','"+warna_icon+"');";
+    QString textQuery = "INSERT INTO `kategori` (`nama_kategori`,`id_icon`,`warna_icon`) VALUES ('"+nama_kategori+"','"+QString::number(id_icon)+"','"+warna_icon+"');";
     QSqlQuery query;
     QJsonObject response;
     bool ok;
@@ -96,7 +96,7 @@ QString Ekategori::updateKategori(int id_kategori, QString nama_kategori,int id_
 
 QString Ekategori::deleteKategori(int id_kategori)
 {
-    QString textQuery = "DELETE FROM `kategori` WHERE id_transaksi = '"+QString::number(id_kategori)+"';";
+    QString textQuery = "DELETE FROM `kategori` WHERE id_kategori = '"+QString::number(id_kategori)+"';";
     QSqlQuery query;
     QJsonObject response;
     bool ok;

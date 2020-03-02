@@ -1,11 +1,16 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>Day.qml</file>
-        <file>Month.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>Year.qml</file>
-        <file>OtherMenu.qml</file>
         <file>db/spmm.sqlite</file>
+        <file>qml/create/CreateTransaction.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/view/DayList.qml</file>
+        <file>qml/view/MonthList.qml</file>
+        <file>qml/view/OtherMenu.qml</file>
+        <file>qml/view/YearList.qml</file>
+        <file>qml/create/CreateKategori.qml</file>
+        <file>qml/view/Core.qml</file>
+        <file>qml/view/CategoryList.qml</file>
+        <file>qml/edit/EditKategori.qml</file>
     </qresource>
 </RCC>

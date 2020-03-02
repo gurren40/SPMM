@@ -23,6 +23,8 @@ QString Etransaksi::today()
         else response["error"] = query.lastError().text();
     }
     else response["error"] = m_database->lastError().text();
+    this->day = QJsonDocument(response).toJson();
+    emit jsonDataChanged();
     return QJsonDocument(response).toJson();
 }
 
@@ -44,6 +46,8 @@ QString Etransaksi::thisMonth()
         else response["error"] = query.lastError().text();
     }
     else response["error"] = m_database->lastError().text();
+    this->month = QJsonDocument(response).toJson();
+    emit jsonDataChanged();
     return QJsonDocument(response).toJson();
 }
 
@@ -65,6 +69,8 @@ QString Etransaksi::thisYear()
         else response["error"] = query.lastError().text();
     }
     else response["error"] = m_database->lastError().text();
+    this->year = QJsonDocument(response).toJson();
+    emit jsonDataChanged();
     return QJsonDocument(response).toJson();
 }
 
@@ -85,7 +91,7 @@ QString Etransaksi::createTransaksi(QDate waktu_dibuat, int id_kategori, QString
         }
     }
     else response["error"] = m_database->lastError().text();
-    emit jsonDataChanged();
+    this->today();
     return QJsonDocument(response).toJson();
 }
 
@@ -107,7 +113,7 @@ QString Etransaksi::updateTransaksi(int id_transaksi, QDate waktu_dibuat, int id
         }
     }
     else response["error"] = m_database->lastError().text();
-    emit jsonDataChanged();
+    this->today();
     return QJsonDocument(response).toJson();
 }
 
@@ -128,8 +134,28 @@ QString Etransaksi::deleteTransaksi(int id_transaksi)
         }
     }
     else response["error"] = m_database->lastError().text();
-    emit jsonDataChanged();
+    this->today();
     return QJsonDocument(response).toJson();
+}
+
+QString Etransaksi::getRanged() const
+{
+    return ranged;
+}
+
+QString Etransaksi::getYear() const
+{
+    return year;
+}
+
+QString Etransaksi::getMonth() const
+{
+    return month;
+}
+
+QString Etransaksi::getDay() const
+{
+    return day;
 }
 
 QJsonArray Etransaksi::parseSql(QSqlQuery query)
@@ -152,16 +178,6 @@ QJsonArray Etransaksi::parseSql(QSqlQuery query)
     return mTransaksi;
 }
 
-QString Etransaksi::getSelectDateStr() const
-{
-    return selectDateStr;
-}
-
-QString Etransaksi::getSelectRangeDateStr() const
-{
-    return selectRangeDateStr;
-}
-
 QString Etransaksi::selectDate(QString date)
 {
     QJsonObject response;
@@ -180,8 +196,54 @@ QString Etransaksi::selectDate(QString date)
         else response["error"] = query.lastError().text();
     }
     else response["error"] = m_database->lastError().text();
-    selectDateStr = QJsonDocument(response).toJson();
-    emit dateSearchChanged();
+    this->day = QJsonDocument(response).toJson();
+    emit jsonDataChanged();
+    return QJsonDocument(response).toJson();
+}
+
+QString Etransaksi::selectMonth(QString month)
+{
+    QJsonObject response;
+    QJsonArray mTransaksi;
+    QSqlQuery query;
+    bool ok;
+    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE strftime('%Y-%m', transaksi.waktu_dibuat) == strftime('%Y-%m', '"+month+"');";
+    if(m_database->open()){
+        QTextStream(stdout) << textQuery << "\n\n";
+        ok = query.exec(textQuery);
+        if(ok){
+            mTransaksi = parseSql(query);
+            response["error"] = "0";
+            response["transaksi"] = mTransaksi;
+        }
+        else response["error"] = query.lastError().text();
+    }
+    else response["error"] = m_database->lastError().text();
+    this->month = QJsonDocument(response).toJson();
+    emit jsonDataChanged();
+    return QJsonDocument(response).toJson();
+}
+
+QString Etransaksi::selectYear(QString year)
+{
+    QJsonObject response;
+    QJsonArray mTransaksi;
+    QSqlQuery query;
+    bool ok;
+    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE strftime('%Y', transaksi.waktu_dibuat) == strftime('%Y', '"+year+"');";
+    if(m_database->open()){
+        QTextStream(stdout) << textQuery << "\n\n";
+        ok = query.exec(textQuery);
+        if(ok){
+            mTransaksi = parseSql(query);
+            response["error"] = "0";
+            response["transaksi"] = mTransaksi;
+        }
+        else response["error"] = query.lastError().text();
+    }
+    else response["error"] = m_database->lastError().text();
+    this->year = QJsonDocument(response).toJson();
+    emit jsonDataChanged();
     return QJsonDocument(response).toJson();
 }
 
@@ -203,7 +265,7 @@ QString Etransaksi::selectRangeDate(QString date1, QString date2)
         else response["error"] = query.lastError().text();
     }
     else response["error"] = m_database->lastError().text();
-    selectRangeDateStr = QJsonDocument(response).toJson();
+    this->ranged = QJsonDocument(response).toJson();
     emit dateSearchChanged();
     return QJsonDocument(response).toJson();
 }

@@ -1,25 +1,24 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+import QtQuick.Controls.Material 2.12
 
-ApplicationWindow {
-    id:window
-    visible: true
-    width: 480
-    height: 800
-    title: qsTr("Money Manager")
+Page {
+    id:mother
+    anchors.fill: parent
+    property date currentDate : new Date()
 
     SwipeView {
         id: swipeView
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
-        Day {
+        DayList {
         }
 
-        Month {
+        MonthList {
         }
 
-        Year {
+        YearList {
         }
 
         OtherMenu{
