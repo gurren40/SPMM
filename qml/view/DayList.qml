@@ -116,5 +116,6 @@ Page {
         width: height
         //font.pointSize: 35
         visible: true
+        onClicked: stackView.push("qrc:/qml/create/CreateTransaction.qml")
     }
 }
