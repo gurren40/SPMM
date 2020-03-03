@@ -9,6 +9,7 @@ Page {
     header: ToolBar{
         id : theToolbar
         width: parent.width
+        visible: (tabBar.currentIndex == 0) ? true : false
         ToolButton{
             icon.name: "chevron_left"
             onClicked: {

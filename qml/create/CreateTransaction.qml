@@ -4,6 +4,7 @@ import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.3
 import Qt.labs.platform 1.0
+import "../components"
 
 Page {
     id:mother
@@ -74,10 +75,9 @@ Page {
                             text: "Date :"
                             font.pixelSize: Qt.application.font.pixelSize * 0.9
                         }
-                        Label{
-                            id : tanggalDibuat
+                        DatePicker{
                             width: parent.width
-                            text: currentDate.toLocaleString(Qt.locale("id_ID"),"yyyy-MM-dd")
+                            height: 200
                         }
                     }
                 }
@@ -188,6 +188,7 @@ Page {
                     ItemDelegate{
                         text: "Back"
                         icon.name: "chevron_left"
+                        hoverEnabled : true
                         onClicked: stackView.pop()
                         background: Rectangle{
                             color: Material.primary
@@ -197,6 +198,7 @@ Page {
                     ItemDelegate{
                         text: "Create"
                         icon.name: "plus"
+                        hoverEnabled : true
                         background: Rectangle{
                             color: Material.accent
                             anchors.fill: parent
@@ -211,6 +213,9 @@ Page {
                             }
                         }
                     }
+                }
+                Label{
+                    text: " "
                 }
             }
         }

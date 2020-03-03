@@ -12,5 +12,6 @@
         <file>qml/view/Core.qml</file>
         <file>qml/view/CategoryList.qml</file>
         <file>qml/edit/EditKategori.qml</file>
+        <file>qml/components/DatePicker.qml</file>
     </qresource>
 </RCC>
