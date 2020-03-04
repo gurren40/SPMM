@@ -42,10 +42,10 @@ public slots:
     QString thisMonth();
     QString thisYear();
     //read by date
-    QString selectDate(QString date);
-    QString selectMonth(QString month);
-    QString selectYear(QString year);
-    QString selectRangeDate(QString date1, QString date2);
+    QString selectDate(QDate date);
+    QString selectMonth(QDate month);
+    QString selectYear(QDate year);
+    QString selectRangeDate(QDate date1, QDate date2);
 
     //cud
     QString createTransaksi(QDate waktu_dibuat,int id_kategori,QString keterangan,double debet, double kredit);
@@ -58,6 +58,7 @@ private:
     QString month;
     QString year;
     QString ranged;
+    QDate lastSelectedDate;
 };
 
 #endif // ETRANSAKSI_H

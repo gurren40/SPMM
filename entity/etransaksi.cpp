@@ -3,6 +3,7 @@
 Etransaksi::Etransaksi(QSqlDatabase *database, QObject *parent) : QObject(parent)
 {
     m_database = database;
+    lastSelectedDate = QDate();
 }
 
 QString Etransaksi::today()
@@ -91,7 +92,7 @@ QString Etransaksi::createTransaksi(QDate waktu_dibuat, int id_kategori, QString
         }
     }
     else response["error"] = m_database->lastError().text();
-    this->today();
+    this->selectDate(lastSelectedDate);
     return QJsonDocument(response).toJson();
 }
 
@@ -113,7 +114,7 @@ QString Etransaksi::updateTransaksi(int id_transaksi, QDate waktu_dibuat, int id
         }
     }
     else response["error"] = m_database->lastError().text();
-    this->today();
+    this->selectDate(lastSelectedDate);
     return QJsonDocument(response).toJson();
 }
 
@@ -134,7 +135,7 @@ QString Etransaksi::deleteTransaksi(int id_transaksi)
         }
     }
     else response["error"] = m_database->lastError().text();
-    this->today();
+    this->selectDate(lastSelectedDate);
     return QJsonDocument(response).toJson();
 }
 
@@ -178,13 +179,13 @@ QJsonArray Etransaksi::parseSql(QSqlQuery query)
     return mTransaksi;
 }
 
-QString Etransaksi::selectDate(QString date)
+QString Etransaksi::selectDate(QDate date)
 {
     QJsonObject response;
     QJsonArray mTransaksi;
     QSqlQuery query;
     bool ok;
-    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE date(transaksi.waktu_dibuat) == date('"+date+"');";
+    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE date(transaksi.waktu_dibuat) == date('"+date.toString(Qt::ISODate)+"') ORDER BY transaksi.waktu_dibuat ASC;";
     if(m_database->open()){
         QTextStream(stdout) << textQuery << "\n\n";
         ok = query.exec(textQuery);
@@ -198,16 +199,17 @@ QString Etransaksi::selectDate(QString date)
     else response["error"] = m_database->lastError().text();
     this->day = QJsonDocument(response).toJson();
     emit jsonDataChanged();
+    this->lastSelectedDate = date;
     return QJsonDocument(response).toJson();
 }
 
-QString Etransaksi::selectMonth(QString month)
+QString Etransaksi::selectMonth(QDate month)
 {
     QJsonObject response;
     QJsonArray mTransaksi;
     QSqlQuery query;
     bool ok;
-    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE strftime('%Y-%m', transaksi.waktu_dibuat) == strftime('%Y-%m', '"+month+"');";
+    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE strftime('%Y-%m', transaksi.waktu_dibuat) == strftime('%Y-%m', '"+month.toString(Qt::ISODate)+"') ORDER BY transaksi.waktu_dibuat ASC;";
     if(m_database->open()){
         QTextStream(stdout) << textQuery << "\n\n";
         ok = query.exec(textQuery);
@@ -224,13 +226,13 @@ QString Etransaksi::selectMonth(QString month)
     return QJsonDocument(response).toJson();
 }
 
-QString Etransaksi::selectYear(QString year)
+QString Etransaksi::selectYear(QDate year)
 {
     QJsonObject response;
     QJsonArray mTransaksi;
     QSqlQuery query;
     bool ok;
-    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE strftime('%Y', transaksi.waktu_dibuat) == strftime('%Y', '"+year+"');";
+    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE strftime('%Y', transaksi.waktu_dibuat) == strftime('%Y', '"+year.toString(Qt::ISODate)+"') ORDER BY transaksi.waktu_dibuat ASC;";
     if(m_database->open()){
         QTextStream(stdout) << textQuery << "\n\n";
         ok = query.exec(textQuery);
@@ -247,13 +249,13 @@ QString Etransaksi::selectYear(QString year)
     return QJsonDocument(response).toJson();
 }
 
-QString Etransaksi::selectRangeDate(QString date1, QString date2)
+QString Etransaksi::selectRangeDate(QDate date1, QDate date2)
 {
     QJsonObject response;
     QJsonArray mTransaksi;
     QSqlQuery query;
     bool ok;
-    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE date(transaksi.waktu_dibuat) BETWEEN date('"+date1+"') AND date('"+date2+"');";
+    QString textQuery = "SELECT * FROM ((transaksi LEFT JOIN kategori ON transaksi.id_kategori = kategori.id_kategori) LEFT JOIN icon ON kategori.id_icon = icon.id_icon) WHERE date(transaksi.waktu_dibuat) BETWEEN date('"+date1.toString(Qt::ISODate)+"') AND date('"+date2.toString(Qt::ISODate)+"');";
     if(m_database->open()){
         QTextStream(stdout) << textQuery << "\n\n";
         ok = query.exec(textQuery);

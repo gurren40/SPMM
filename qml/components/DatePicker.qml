@@ -10,6 +10,8 @@ Item{
     height: 400
     //property date selectingDate: new Date()
     property date selectingDate : new Date()
+    property bool disableSelectingDate: true
+
     Timer{
         running: true
         repeat: false
@@ -18,7 +20,15 @@ Item{
             tumbler.setCurrentIndexAt(2,(selectingDate.getFullYear() - 2000),500);
             tumbler.setCurrentIndexAt(1,(selectingDate.getMonth()),500);
             tumbler.setCurrentIndexAt(0,(selectingDate.getDate()-1),500);
-            console.log(selectingDate.getFullYear() - 2000)
+            console.log(selectingDate.getFullYear() - 2000);
+            mother.disableSelectingDate = false;
+        }
+    }
+
+    function updateSelectingDate(){
+        if(!mother.disableSelectingDate){
+            var newDate = new Date(Number(yearColumn.currentIndex)+2000,Number(monthColumn.currentIndex),Number(tumblerDayColumn.currentIndex)+1);
+            mother.selectingDate = newDate;
         }
     }
 
@@ -35,36 +45,30 @@ Item{
         }
 
         readonly property real delegateTextMargins: characterMetrics.width * 1.5
-        readonly property var days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
         TumblerColumn {
             id: tumblerDayColumn
+            model:ListModel{
+                Component.onCompleted: {
+                    var theMonth = new Date(selectingDate.getFullYear(),Number(selectingDate.getMonth()) + 1,0);
+                    for(var i = 1;i<=theMonth.getDate();i++){
+                        append({value:i});
+                    }
+                }
+            }
+            onCurrentIndexChanged: mother.updateSelectingDate();
 
             function updateModel() {
                 var previousIndex = tumblerDayColumn.currentIndex;
-                var newDays = tumbler.days[monthColumn.currentIndex];
 
-                if (!model) {
-                    var array = [];
-                    for (var i = 0; i < newDays; ++i) {
-                        array.push(i + 1);
-                    }
-                    model = array;
-                } else {
-                    // If we've already got days in the model, just add or remove
-                    // the minimum amount necessary to make spinning the month column fast.
-                    var difference = model.length - newDays;
-                    if (model.length > newDays) {
-                        model.splice(model.length - 1, difference);
-                    } else {
-                        var lastDay = model[model.length - 1];
-                        for (i = lastDay; i < lastDay + difference; ++i) {
-                            model.push(i + 1);
-                        }
-                    }
+                tumblerDayColumn.model.clear();
+                var theMonth = new Date(Number(yearColumn.currentIndex)+2000,Number(monthColumn.currentIndex) + 1,0);
+                for(var i = 1;i<=theMonth.getDate();i++){
+                    tumblerDayColumn.model.append({value:i});
                 }
 
-                tumbler.setCurrentIndexAt(0, Math.min(newDays - 1, previousIndex));
+                tumbler.setCurrentIndexAt(0, previousIndex);
+                mother.updateSelectingDate();
             }
         }
         TumblerColumn {
@@ -83,6 +87,7 @@ Item{
                     }
                 }
             }
+            onCurrentIndexChanged: tumblerDayColumn.updateModel()
         }
     }
 }

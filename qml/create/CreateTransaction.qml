@@ -75,7 +75,13 @@ Page {
                             text: "Date :"
                             font.pixelSize: Qt.application.font.pixelSize * 0.9
                         }
+                        Label{
+                            width: parent.width
+                            text: theDate.selectingDate.toLocaleDateString()
+                            font.pixelSize: Qt.application.font.pixelSize * 0.9
+                        }
                         DatePicker{
+                            id:theDate
                             width: parent.width
                             height: 200
                         }
@@ -123,27 +129,6 @@ Page {
                 }
                 Label{
                     text: " "
-                }
-                ItemDelegate{
-                    id:categoryColorChooser
-                    width: parent.width
-                    icon.color:"white"
-                    icon.name: "default"
-                    text: "Select Icon Color"
-                    onClicked: colorDialog.open()
-                    ColorDialog {
-                        id: colorDialog
-                        title: "Please choose a color"
-                        visible: false
-                        color: value
-                        onAccepted: {
-                            console.log("You chose: " + colorDialog.color)
-                            categoryColorChooser.icon.color = colorDialog.color
-                        }
-                        onRejected: {
-                            console.log("Canceled")
-                        }
-                    }
                 }
                 ItemDelegate{
                     width: parent.width
@@ -205,7 +190,7 @@ Page {
                         }
                         onClicked: {
                             if((kategoriBox.displayName != "Select Category") && (keterangan.text != "")){
-                                //eKategori.createKategori(nama_kategori.text,newIcon.currentText,categoryColorChooser.icon.color);
+                                eTransaksi.createTransaksi(theDate.selectingDate,kategoriBox.currentText,keterangan.text,debet.text,kredit.text)
                                 stackView.pop();
                             }
                             else{
